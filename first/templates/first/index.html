@@ -1,0 +1,12 @@
+{% extends 'first/base.html' %}
+{% load static %}
+{% block content %}
+	<h1>메인페이지</h1>
+	<img src="{% static 'first/sunrays-8283601_1280.jpg' %}" alt="sunrays-8283601_1280.jpg">
+	<p>{{ cur_date }}</p>
+	<p>{{ cur_date|date:'Y년 m월 d일  H시 i분 s초' }}</p>
+	{# 변수를 쓰기위해서는 {{  }} 안에 context에 설정한 변수를 작성	#}
+	{# 변수 뒤에 '|'를 붙이고 타입을 쓰면 포맷팅도 가능 #}
+
+	<a href="{% url 'select' %}">시작하기</a>
+{% endblock %}

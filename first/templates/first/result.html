@@ -1,0 +1,9 @@
+{% extends 'first/base.html' %}
+{% block content %}
+	<h3>추천 번호는 다음과 같습니다.</h3>
+	<ul>
+		{% for num in nums %}
+			<li>{{ num }}</li>
+		{% endfor %}
+	</ul>
+{% endblock %}
