@@ -1,0 +1,35 @@
+{% extends 'third/base.html' %}
+{% load static %}
+{% block content %}
+	<div class="container">
+		<ul>
+			{% for item in rastaurants %}
+				<li class="row">
+					<h4>{{ item.name }}</h4>
+					<p>{{ item.addr }}</p>
+					<a href="{% url 'restaurant-detail' %}?id={{ item.id }}">자세히보기</a>
+					<a href="{% url 'restaurant-update' %}?id={{ item.id }}">수정하기</a>
+				</li>
+			{% endfor %}
+		</ul>
+
+		<nav aria-label="Page navigation example">
+			<ul class="pagination">
+				{% if rastaurants.has_previous %}
+					<li class="page-item">
+						<a href="?page=1" aria-label="Previous" aria-hidden="true" class="page-link">&laquo;</a>
+					</li>
+					<li class="page-item">
+						<a href="?page={{ rastaurants.previous_page_number }}" aria-hidden="true" aria-label="Previous" class="page-link">&lt;</a>
+					</li>
+				{% endif %}
+				<li class="page-item active"><a class="page-link" href="#">{{ rastaurants.number }}</a></li>
+				{% if rastaurants.has_next %}
+					<li class="page-item">
+						<a href="?page={{ rastaurants.next_page_number }}" class="page-link">{{ rastaurants.next_page_number }}</a>
+					</li>
+				{% endif %}
+			</ul>
+		</nav>
+	</div>
+{% endblock %}

@@ -1,0 +1,10 @@
+{% extends 'third/base.html' %}
+{% load static %}
+{% block content %}
+	<div class="container">
+		<h3>{{ item.name }}</h3>
+		<hr/>
+		<p>{{ item.addr }}</p>
+		<a href="{% url 'restaurant-delete' %}?id={{ item.id }}" class="btn btn-sm btn-danger">삭제</a>
+	</div>
+{% endblock %}
