@@ -1,9 +1,9 @@
 from django.core.paginator import Paginator
-from django.shortcuts import render, get_object_or_404
+from django.shortcuts import render, get_object_or_404, redirect
 from django.http import HttpResponseRedirect
 
-from third.forms import RestaurantForm
-from third.models import Restaurant
+from third.forms import RestaurantForm, ReviewForm
+from third.models import Restaurant, Review
 
 
 # Create your views here.
@@ -51,10 +51,11 @@ def update(req):
 	return HttpResponseRedirect('/third/list/')
 
 
-def detail(req):
-	if 'id' in req.GET:
-		item = get_object_or_404(Restaurant, pk=req.GET.get('id'))
-		return render(req, 'third/detail.html', {'item': item})
+def detail(req, id):
+	if id is not None:
+		item = get_object_or_404(Restaurant, pk=id)
+		reviews = Review.objects.filter(restaurant=item).all()
+		return render(req, 'third/detail.html', {'item': item, 'reviews': reviews})
 
 
 def delete(req):
@@ -63,3 +64,15 @@ def delete(req):
 		item.delete()
 
 	return HttpResponseRedirect('/third/list/')
+
+
+def review_create(req, restaurant_id):
+	if req.method == 'POST':
+		form = ReviewForm(req.POST)
+		if form.is_valid():
+			new_item = form.save()
+		return redirect('restaurant-detail', id=restaurant_id)
+
+	item = get_object_or_404(Restaurant, pk=restaurant_id)
+	form = ReviewForm(initial={'restaurant': item})
+	return render(req, 'third/review_create.html', {'form': form, 'item': item})
