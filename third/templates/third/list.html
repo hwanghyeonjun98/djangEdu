@@ -6,7 +6,7 @@
 			{% for item in rastaurants %}
 				<li class="row">
 					<h4>{{ item.name }}</h4>
-					<p>{{ item.addr }}</p>
+					<p>{{ item.addr }} / {{ item.point_avg }} / {{ item.reviews_count }}</p>
 					<a href="{% url 'restaurant-detail' id=item.id %}">자세히보기</a>
 					<a href="{% url 'restaurant-update' %}?id={{ item.id }}">수정하기</a>
 				</li>

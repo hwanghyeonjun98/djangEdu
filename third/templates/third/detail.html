@@ -12,6 +12,7 @@
 			{% for review in reviews %}
 				<li>
 					{{ review.point }}점 | {{ review.comment }}
+					<a href="{% url 'review-delete' restaurant_id=item.id review_id=review.id %}">리뷰 삭제</a>
 				</li>
 			{% endfor %}
 		</ul>

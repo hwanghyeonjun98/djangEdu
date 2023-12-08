@@ -4,11 +4,12 @@ from django.http import HttpResponseRedirect
 
 from third.forms import RestaurantForm, ReviewForm
 from third.models import Restaurant, Review
+from django.db.models import Count, Avg
 
 
 # Create your views here.
 def list(req):
-	rastaurants = Restaurant.objects.all().order_by('-id')
+	rastaurants = Restaurant.objects.all().order_by('-id').annotate(reviews_count=Count('review')).annotate(point_avg=Avg('review__point'))
 	paginator = Paginator(rastaurants, 5)
 
 	page = req.GET.get('page')
@@ -76,3 +77,25 @@ def review_create(req, restaurant_id):
 	item = get_object_or_404(Restaurant, pk=restaurant_id)
 	form = ReviewForm(initial={'restaurant': item})
 	return render(req, 'third/review_create.html', {'form': form, 'item': item})
+
+
+def review_delete(req, restaurant_id, review_id):
+	item = get_object_or_404(Review, pk=review_id)
+	item.delete()
+
+	return redirect('restaurant-detail', id=restaurant_id)
+
+
+def review_list(req):
+	reviews = Review.objects.all().select_related().order_by('-created_at')
+	paginator = Paginator(reviews, 10)
+
+	page = req.GET.get('page')
+	items = paginator.get_page(page)
+
+	context = {
+		'reviews': items,
+		'test': reviews
+	}
+
+	return render(req, 'third/review_list.html', context)
