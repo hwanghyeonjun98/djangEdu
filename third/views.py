@@ -2,7 +2,7 @@ from django.core.paginator import Paginator
 from django.shortcuts import render, get_object_or_404, redirect
 from django.http import HttpResponseRedirect
 
-from third.forms import RestaurantForm, ReviewForm
+from third.forms import RestaurantForm, ReviewForm ,UpdateRestaurantForm
 from third.models import Restaurant, Review
 from django.db.models import Count, Avg
 
@@ -40,8 +40,9 @@ def update(req):
 	if req.method == 'POST' and 'id' in req.POST:
 		# item = Restaurant.objects.get(pk=req.POST.get('id'))
 		item = get_object_or_404(Restaurant, pk=req.POST['id'])
-		form = RestaurantForm(req.POST, instance=item)
-		if form.is_valid():
+		password = req.POST.get('password', '')
+		form = UpdateRestaurantForm(req.POST, instance=item)
+		if form.is_valid() and password == item.password:
 			item = form.save()
 	elif req.method == 'GET':
 		# item = Restaurant.objects.get(pk=req.GET.get('id'))
@@ -59,12 +60,18 @@ def detail(req, id):
 		return render(req, 'third/detail.html', {'item': item, 'reviews': reviews})
 
 
-def delete(req):
+def delete(req, id):
+	item = get_object_or_404(Restaurant, pk=id)
+	if req.method == 'POST' and 'password' in req.POST:
+		if item.password == req.POST['password'] or item.password is None:
+			item.delete()
+			return redirect('list')
+		return redirect('restaurant-detail', id)
 	if 'id' in req.GET:
-		item = get_object_or_404(Restaurant, pk=req.GET.get('id'))
+		item = get_object_or_404(Restaurant, pk=id)
 		item.delete()
 
-	return HttpResponseRedirect('/third/list/')
+	return render(req, 'third/delete.html', {'item': item})
 
 
 def review_create(req, restaurant_id):

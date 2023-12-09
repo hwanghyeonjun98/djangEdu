@@ -5,6 +5,10 @@ from django.db import models
 class Restaurant(models.Model):
 	name = models.CharField(max_length=30)
 	addr = models.CharField(max_length=200)
+
+	password = models.CharField(max_length=20, default=None, null=True)
+	image = models.CharField(max_length=500, default=None, null=True)
+
 	created_at = models.DateTimeField(auto_now_add=True)
 	updated_at = models.DateTimeField(auto_now=True)
 

@@ -5,7 +5,7 @@
 		<h3>{{ item.name }}</h3>
 		<hr />
 		<p>{{ item.addr }}</p>
-		<a href="{% url 'restaurant-delete' %}?id={{ item.id }}" class="btn btn-sm btn-danger">삭제</a>
+		<a href="{% url 'restaurant-delete' id=item.id %}" class="btn btn-sm btn-danger">삭제</a>
 		<hr>
 		<a href="{% url 'review-create' restaurant_id=item.id %}">리뷰쓰기</a>
 		<ul>
